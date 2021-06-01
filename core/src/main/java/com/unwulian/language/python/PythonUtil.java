@@ -39,7 +39,7 @@ public class PythonUtil {
 
     public static void main(String[] args) {
         URL resource = PythonUtil.class.getClassLoader().getResource("py/extractTableFromPDF.py");
-        String invoke = PythonUtil.invokeDefault(resource.getPath().substring(1), "C:\\Users\\Administrator\\Desktop\\test.pdf", "150");
+        String invoke = PythonUtil.invokeDefault(resource.getPath().substring(1), "C:\\Users\\Administrator\\Desktop\\test.pdf", "8","151");
         System.out.println(invoke);
     }
 }

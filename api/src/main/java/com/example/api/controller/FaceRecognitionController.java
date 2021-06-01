@@ -14,7 +14,7 @@ public class FaceRecognitionController {
     private IFaceRecognitionService faceRecognitionService;
 
 
-    @GetMapping
+    @GetMapping("/test")
     public void extract(){
         faceRecognitionService.extract();
     }

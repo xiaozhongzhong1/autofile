@@ -34,8 +34,8 @@ public class PDFReader implements FileReader<PDDocument> {
         try {
             textStripper = new PDFTextStripper("GBK");
             textStripper.setSortByPosition(true);
-            textStripper.setStartPage(7);
-            textStripper.setEndPage(151);
+            textStripper.setStartPage(startPage);
+            textStripper.setEndPage(endPage);
             String content = textStripper.getText(doc);
             return content;
         } catch (IOException e) {

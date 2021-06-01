@@ -19,7 +19,8 @@ def extract(path, start, end):
             if i > end:
                 break
             pageindex = pdf.pages[i]
-            table.append(pageindex.extract_tables())
+            if (pageindex):
+                table.append(pageindex.extract_tables())
 
         return table
 

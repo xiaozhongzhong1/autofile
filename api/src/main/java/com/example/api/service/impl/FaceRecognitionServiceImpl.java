@@ -2,12 +2,12 @@ package com.example.api.service.impl;
 
 import com.example.api.service.IFaceRecognitionService;
 import com.unwulian.doc.pdf.PDFReader;
+import com.unwulian.language.python.PythonUtil;
 import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDDocumentCatalog;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.Map;
+import java.net.URL;
 import java.util.Objects;
 
 @Service
@@ -23,8 +23,12 @@ public class FaceRecognitionServiceImpl implements IFaceRecognitionService {
         try {
             String file = "C:\\Users\\Administrator\\Desktop\\test.pdf";
             doc = pdfReader.read(file);
-            String content = pdfReader.getContent(doc, 8, 151);
+            String content = pdfReader.getContent(doc, 8, 9);
+            URL resource = PythonUtil.class.getClassLoader().getResource("py/extractTableFromPDF.py");
+            String tables = PythonUtil.invokeDefault(resource.getPath().substring(1), "C:\\Users\\Administrator\\Desktop\\test.pdf"
+                    , "8", "9");
 
+            System.out.println(tables);
 
 
         } catch (Exception e) {
