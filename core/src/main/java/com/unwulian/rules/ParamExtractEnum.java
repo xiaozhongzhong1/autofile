@@ -6,6 +6,10 @@ public enum ParamExtractEnum {
     //特征值
     private String characteristicValue;
 
+    public String getCharacteristicValue() {
+        return characteristicValue;
+    }
+
     public ParamExtractEnum setCharacteristicValue(String characteristicValue) {
         this.characteristicValue = characteristicValue;
         return this;

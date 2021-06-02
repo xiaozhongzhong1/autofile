@@ -33,12 +33,15 @@ public class FaceRecognitionServiceImpl implements IFaceRecognitionService {
             FileUtil.writeString(content,new File(CONTENT_PATH),"UTF-8");
             System.out.println("content is ok");
 
-
+            /**
+             * 执行py脚本比较慢，获取表格可以自己手动执行extractTableFromPDF.py文件
+             */
+/*
             URL resource = PythonUtil.class.getClassLoader().getResource("py/extractTableFromPDF.py");
             String tables = PythonUtil.invokeDefault(resource.getPath().substring(1), "C:\\Users\\Administrator\\Desktop\\test.pdf"
                     , "8", "10");
             FileUtil.writeString(tables,new File(TABLES_PATH),"UTF-8");
-            System.out.println("tables is ok");
+            System.out.println("tables is ok");*/
 
         } catch (Exception e) {
             System.out.println(e);
@@ -50,5 +53,13 @@ public class FaceRecognitionServiceImpl implements IFaceRecognitionService {
                 e.printStackTrace();
             }
         }
+    }
+
+    /**
+     * 分析数据
+     */
+    @Override
+    public void analyze() {
+
     }
 }
