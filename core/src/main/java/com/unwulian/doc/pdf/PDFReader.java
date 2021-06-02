@@ -1,11 +1,13 @@
 package com.unwulian.doc.pdf;
 
 import com.unwulian.common.FileReader;
+import com.unwulian.domain.PDFInterface;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.util.PDFTextStripper;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 public class PDFReader implements FileReader<PDDocument> {
 
@@ -50,16 +52,16 @@ public class PDFReader implements FileReader<PDDocument> {
         PDDocument read = null;
         try {
             PDFReader pdfReader = new PDFReader();
-            String file = "C:\\Users\\Administrator\\Desktop\\test.pdf";
+            String file = "f:\\test.pdf";
             read = pdfReader.read(new File(file));
-
-
             PDFTextStripper textStripper = new PDFTextStripper("GBK");
             textStripper.setSortByPosition(true);
             textStripper.setStartPage(7);
-            textStripper.setEndPage(151);
+            textStripper.setEndPage(152);
             String content = textStripper.getText(read);
-            System.out.println(read);
+            String [] lines = content.split("\r\n");
+            List<PDFInterface> list = PDFDataDeal.dealData(lines);
+            list.stream().forEach(e -> System.out.println(e.toString()));
         } finally {
             read.close();
         }
