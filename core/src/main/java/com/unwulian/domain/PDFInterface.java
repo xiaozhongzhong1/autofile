@@ -1,5 +1,7 @@
 package com.unwulian.domain;
 
+import org.omg.CORBA.PRIVATE_MEMBER;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -17,6 +19,8 @@ public class PDFInterface implements Serializable {
     private String uri;
 
     private List<PDFInterfacceField> fieldList;
+
+    private List<PDFInterfacceField> resFieldList;
 
     public String getOperator() {
         return operator;
@@ -48,6 +52,14 @@ public class PDFInterface implements Serializable {
 
     public void setFieldList(List<PDFInterfacceField> fieldList) {
         this.fieldList = fieldList;
+    }
+
+    public List<PDFInterfacceField> getResFieldList() {
+        return resFieldList;
+    }
+
+    public void setResFieldList(List<PDFInterfacceField> resFieldList) {
+        this.resFieldList = resFieldList;
     }
 
     @Override

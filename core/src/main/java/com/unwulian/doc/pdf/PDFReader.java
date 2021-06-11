@@ -1,6 +1,8 @@
 package com.unwulian.doc.pdf;
 
+import cn.hutool.core.io.file.FileWriter;
 import com.unwulian.common.FileReader;
+import com.unwulian.domain.PDFInterfacceField;
 import com.unwulian.domain.PDFInterface;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.util.PDFTextStripper;
@@ -52,18 +54,45 @@ public class PDFReader implements FileReader<PDDocument> {
         PDDocument read = null;
         try {
             PDFReader pdfReader = new PDFReader();
-            String file = "f:\\test.pdf";
+            String file = "F:\\PDF\\人脸识别.pdf";
             read = pdfReader.read(new File(file));
             PDFTextStripper textStripper = new PDFTextStripper("GBK");
             textStripper.setSortByPosition(true);
-            textStripper.setStartPage(7);
-            textStripper.setEndPage(152);
+            textStripper.setStartPage(4);
+            textStripper.setEndPage(128);
             String content = textStripper.getText(read);
             String [] lines = content.split("\r\n");
-            List<PDFInterface> list = PDFDataDeal.dealData(lines);
-            list.stream().forEach(e -> System.out.println(e.toString()));
+            List<PDFInterface> list = PDFDataDeal.dealDataShenzhen(lines);
+            //list.stream().forEach(e -> System.out.println(e.toString()));
+            writeMD(list);
         } finally {
             read.close();
         }
+    }
+
+    public static void writeMD(List<PDFInterface> list){
+        FileWriter writer = new FileWriter("f:\\深圳人脸识别.md");
+        list.stream().forEach(l -> {
+            StringBuilder start = new StringBuilder("### ")
+                    .append(l.getTitle()).append("\n")
+                    .append("**type: ")
+                    .append(l.getOperator()).append("**").append("\n")
+                    .append("**payload:**").append("\n")
+                    .append("```").append("\n").append("request").append("\n");
+            List<PDFInterfacceField> fieldList = l.getFieldList();
+            fieldList.stream().forEach(f -> start.append(f.getName())
+                    .append(":").append(f.getType())
+                    .append(":").append(f.getRemark().replace(":","."))
+                    .append("\n"));
+            start.append("response").append("\n");
+            List<PDFInterfacceField> repFieldList = l.getResFieldList();
+            repFieldList.stream().forEach(f -> start.append(f.getName())
+                    .append(":").append(f.getType())
+                    .append(":").append(f.getRemark().replace(":","."))
+                    .append("\n"));
+            start.append("```").append("\n");
+            writer.append(start.toString());
+        });
+
     }
 }
