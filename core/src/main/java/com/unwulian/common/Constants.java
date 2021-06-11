@@ -17,14 +17,21 @@ import java.util.Map;
  */
 public class Constants {
 
-    public final static String START_LINE = "下发 body";
+    public final static String START_LINE = "发送:";
+
+    public final static String START_LINE_RES = "返回:";
 
     public final static String INTERFACE_KEY = "Operator:";
 
-    public final static String INTERFACE_URI = "URI:";
+    //public final static String INTERFACE_URI = "URI:";
+    public final static String INTERFACE_URI = "Name\"";
 
 
-    public final static String BODY_IS_CN = "[\\\\u4e00-\\\\u9fa5]+";
+
+    public final static String BODY_IS_EN = "[a-zA-Z]+";
+    public final static String BODY_IS_CN = "[\\\\u4E00-\\\\u9FA5].*";
+
+    public final static String BODY_IS_CN_ALL = "[\\u4E00-\\u9FA5]+";
 
     public final static String BODY_IS_MARTH = "[0-9].*";
 
@@ -32,9 +39,14 @@ public class Constants {
 
     public final static String BODY_SYMBOL_COLON = ":";
 
-    public final static String BODY_SYMBOL_URI_SPLIT = "<server ipaddr>";
+    //public final static String BODY_SYMBOL_URI_SPLIT = "<server ipaddr>";
+    public final static String BODY_SYMBOL_URI_SPLIT = ":";
+
+    public final static String LINE_FILTER_OPTIONAL = "(optional)";
 
     public static String TABLE_PATH = "F:\\tables.txt";
+
+    public static String SPLIT_URI_SLASH = "\"";
 
     public static Map<String, PDFInterfacceField> fieldMap = new HashMap<>();
 
@@ -49,9 +61,9 @@ public class Constants {
                 PDFInterfacceField field = new PDFInterfacceField();
                 JSONArray fieldJson = gson.fromJson(l.toString(),JSONArray.class);
                 field.setName(fieldJson.get(0).toString());
-                field.setType(fieldJson.get(1).toString());
-                field.setRange(fieldJson.get(2).toString());
-                field.setRemark(fieldJson.get(3).toString());
+                field.setType(fieldJson.get(4).toString());
+                field.setRange(fieldJson.get(3).toString());
+                field.setRemark(fieldJson.get(1).toString());
                 fieldMap.put(field.getName(),field);
             });
         });
