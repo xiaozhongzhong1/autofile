@@ -1,10 +1,14 @@
 package com.unwulian.doc.pdf;
 
 import cn.hutool.core.io.file.FileWriter;
+import com.unwulian.common.CatalogBean;
 import com.unwulian.common.FileReader;
 import com.unwulian.domain.PDFInterfacceField;
 import com.unwulian.domain.PDFInterface;
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.interactive.documentnavigation.destination.PDPageXYZDestination;
+import org.apache.pdfbox.pdmodel.interactive.documentnavigation.outline.PDOutlineItem;
 import org.apache.pdfbox.util.PDFTextStripper;
 
 import java.io.File;
@@ -28,13 +32,14 @@ public class PDFReader implements FileReader<PDDocument> {
 
     /**
      * 获取所有页数的内容，便于用正则获取url信息
+     *
      * @param doc
      * @param startPage
      * @param endPage
      * @return
      */
-    public String getContent(PDDocument doc,int startPage,int endPage){
-        PDFTextStripper textStripper = null;
+    public String getContent(PDDocument doc, int startPage, int endPage) {
+        PDFTextStripper textStripper;
         try {
             textStripper = new PDFTextStripper("GBK");
             textStripper.setSortByPosition(true);
@@ -44,33 +49,22 @@ public class PDFReader implements FileReader<PDDocument> {
             return content;
         } catch (IOException e) {
             e.printStackTrace();
-            throw new RuntimeException("获取"+startPage+"-"+endPage+"的内容失败");
+            throw new RuntimeException("获取" + startPage + "-" + endPage + "的内容失败");
         }
 
     }
 
-
-    public static void main(String[] args) throws IOException {
-        PDDocument read = null;
-        try {
-            PDFReader pdfReader = new PDFReader();
-            String file = "F:\\PDF\\人脸识别.pdf";
-            read = pdfReader.read(new File(file));
-            PDFTextStripper textStripper = new PDFTextStripper("GBK");
-            textStripper.setSortByPosition(true);
-            textStripper.setStartPage(4);
-            textStripper.setEndPage(128);
-            String content = textStripper.getText(read);
-            String [] lines = content.split("\r\n");
-            List<PDFInterface> list = PDFDataDeal.dealDataShenzhen(lines);
-            //list.stream().forEach(e -> System.out.println(e.toString()));
-            writeMD(list);
-        } finally {
-            read.close();
-        }
+    public CatalogBean getCatalogBean(PDDocument doc) throws IOException {
+        PDFCatalogParser pdfCatalogParser = new PDFCatalogParser(doc);
+        CatalogBean catalogBean = pdfCatalogParser.getCatalogBean();
+        return catalogBean;
     }
 
-    public static void writeMD(List<PDFInterface> list){
+    /**
+     * 将获取到的内容输出到markdown文档中去
+     * @param list
+     */
+    public static void writeMD(List<PDFInterface> list) {
         FileWriter writer = new FileWriter("f:\\深圳人脸识别.md");
         list.stream().forEach(l -> {
             StringBuilder start = new StringBuilder("### ")
@@ -82,17 +76,36 @@ public class PDFReader implements FileReader<PDDocument> {
             List<PDFInterfacceField> fieldList = l.getFieldList();
             fieldList.stream().forEach(f -> start.append(f.getName())
                     .append(":").append(f.getType())
-                    .append(":").append(f.getRemark().replace(":","."))
+                    .append(":").append(f.getRemark().replace(":", "."))
                     .append("\n"));
             start.append("response").append("\n");
             List<PDFInterfacceField> repFieldList = l.getResFieldList();
             repFieldList.stream().forEach(f -> start.append(f.getName())
                     .append(":").append(f.getType())
-                    .append(":").append(f.getRemark().replace(":","."))
+                    .append(":").append(f.getRemark().replace(":", "."))
                     .append("\n"));
             start.append("```").append("\n");
             writer.append(start.toString());
         });
 
     }
+
+    public static void main(String[] args) throws IOException {
+        PDDocument doc = null;
+        try {
+            PDFReader pdfReader = new PDFReader();
+            String filePath = "C:\\Users\\Administrator\\Desktop\\人脸识别.pdf";
+            doc = pdfReader.read(filePath);
+            CatalogBean catalogBean = pdfReader.getCatalogBean(doc);
+            System.out.println(catalogBean);
+            /*String content = pdfReader.getContent(doc, 4, 128);
+            String[] lines = content.split("\r\n");
+            List<PDFInterface> list = PDFDataDeal.dealDataShenzhen(lines);
+            writeMD(list);*/
+        } finally {
+            doc.close();
+        }
+    }
+
+
 }
