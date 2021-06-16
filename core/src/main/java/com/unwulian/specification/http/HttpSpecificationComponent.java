@@ -2,8 +2,10 @@ package com.unwulian.specification.http;
 
 import cn.hutool.core.collection.CollUtil;
 import com.google.common.base.Joiner;
+import com.unwulian.specification.bean.ComponentParam;
 import com.unwulian.specification.bean.TableBean;
 import com.unwulian.specification.codemodel.MdModel;
+import com.unwulian.specification.exception.GlobalException;
 import com.unwulian.specification.parser.IParser;
 
 import java.util.ArrayList;
@@ -11,7 +13,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class HttpSpecificationComponent {
-    private HttpDictSpecification httpDictSpecification = new HttpDictSpecification();
+    private HttpDictSpecification httpDictSpecification = new HttpDictSpecification(0,1,4);
     private HttpRequestSpecification httpRequestSpecification = new HttpRequestSpecification();
     private HttpResponseSpecification httpResponseSpecification = new HttpResponseSpecification();
     private String dictReq;
@@ -29,6 +31,17 @@ public class HttpSpecificationComponent {
         this.response = response;
         this.title = title;
         this.type = type;
+    }
+
+    public HttpSpecificationComponent(ComponentParam componentParam) {
+        this.dictReq = componentParam.getDictReq();
+        this.dictResp = componentParam.getDictResp();
+        this.request = componentParam.getRequest();
+        this.response = componentParam.getResponse();
+        this.title = componentParam.getTitle();
+        this.type = componentParam.getType();
+        this.dictReqAppend = componentParam.getDictReqAppend();
+        this.dictRespAppend = componentParam.getDictRespAppend();
     }
 
     public String[] getDictReqAppend() {
@@ -66,13 +79,19 @@ public class HttpSpecificationComponent {
         appendTableBeans(dictBeansResp,dictRespAppend);
         String requestStr = httpRequestSpecification.parse(request);
         String responseStr = httpResponseSpecification.parse(response);
-        String populateRequest = populateLine(dictBeansReq, requestStr);
-        String populateResponse = populateLine(dictBeansResp, responseStr);
-        String body = Joiner.on(System.lineSeparator()).join("request", populateRequest, "response", populateResponse);
-        String mdContent = MdModel.ZD_MODEL.replace(MdModel.TITLE_PLACE_HOLDER, title)
-                .replace(MdModel.TYPE_PLACE_HOLDER, type)
-                .replace(MdModel.BODY_PLACE_HOLDER, body);
-        return mdContent;
+        try {
+            String populateRequest = populateLine(dictBeansReq, requestStr);
+            String populateResponse = populateLine(dictBeansResp, responseStr);
+            String body = Joiner.on(System.lineSeparator()).join("request", populateRequest, "response", populateResponse);
+            String mdContent = MdModel.ZD_MODEL.replace(MdModel.TITLE_PLACE_HOLDER, title)
+                    .replace(MdModel.TYPE_PLACE_HOLDER, type)
+                    .replace(MdModel.BODY_PLACE_HOLDER, body);
+            return mdContent;
+        }catch (Exception e){
+            GlobalException.getInstance().addError(type+" has no match :"+e.getMessage());
+            return null;
+        }
+
     }
 
     private void appendTableBeans(List<TableBean> dictBeansReq,String[] append) {
@@ -89,6 +108,7 @@ public class HttpSpecificationComponent {
     private String populateLine(List<TableBean> dictBeans, String requestStr) {
         List<String> newLines = new ArrayList<>();
         String[] lines = requestStr.split(IParser.LINE_SEPERATOR);
+        List<String> errors = new ArrayList<>();
         for (String line : lines) {
             if (line.contains("#")) {
                 newLines.add(line);
@@ -99,10 +119,13 @@ public class HttpSpecificationComponent {
                 TableBean tableBean = getTableBean(key, dictBeans);
                 newLines.add(Joiner.on(":").join(line, tableBean.getType(), tableBean.getComment()));
             }catch (Exception e){
-                System.out.println(e);
+                errors.add(key);
             }
         }
-        return newLines.stream().collect(Collectors.joining(System.lineSeparator()));
+        if(errors.isEmpty()) {
+            return newLines.stream().collect(Collectors.joining(System.lineSeparator()));
+        }
+        throw new RuntimeException(errors.stream().collect(Collectors.joining("|")));
     }
 
 

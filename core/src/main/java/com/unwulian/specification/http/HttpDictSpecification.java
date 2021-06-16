@@ -9,7 +9,11 @@ import java.util.List;
 
 public class HttpDictSpecification implements IDictSpecification {
     private final JsonChecker jsonChecker = new JsonChecker();
-    private final JsonDictParser jsonDictParser = new JsonDictParser(0,1,4);
+    private final JsonDictParser jsonDictParser;
+
+    public HttpDictSpecification(Integer... indexes) {
+        jsonDictParser = new JsonDictParser(indexes);
+    }
 
     @Override
     public boolean check(String content) {
