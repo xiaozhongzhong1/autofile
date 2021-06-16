@@ -9,7 +9,6 @@ import com.unwulian.specification.bean.ComponentParam;
 import com.unwulian.specification.bean.TableBean;
 import com.unwulian.specification.bean.XmlBean;
 import com.unwulian.specification.exception.GlobalException;
-import com.unwulian.specification.utils.XPathUtil;
 
 import java.io.File;
 import java.util.*;

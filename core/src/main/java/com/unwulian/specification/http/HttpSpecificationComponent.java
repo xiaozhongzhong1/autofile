@@ -1,6 +1,5 @@
 package com.unwulian.specification.http;
 
-import cn.hutool.core.collection.CollUtil;
 import com.google.common.base.Joiner;
 import com.unwulian.specification.bean.ComponentParam;
 import com.unwulian.specification.bean.TableBean;
@@ -9,7 +8,9 @@ import com.unwulian.specification.exception.GlobalException;
 import com.unwulian.specification.parser.IParser;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class HttpSpecificationComponent {
@@ -72,8 +73,10 @@ public class HttpSpecificationComponent {
 
         List<TableBean> dictBeansResp = httpDictSpecification.parse(dictResp);
         appendTableBeans(dictBeansResp, dictRespAppend);
+
         String requestStr = httpRequestSpecification.parse(request);
         String responseStr = httpResponseSpecification.parse(response);
+
         try {
             String populateRequest = populateLine(dictBeansReq, requestStr);
             String populateResponse = populateLine(dictBeansResp, responseStr);
@@ -90,14 +93,14 @@ public class HttpSpecificationComponent {
     }
 
     private void appendTableBeans(List<TableBean> dictBeansReq, String[] append) {
-        if (null != append) {
-            for (String s : append) {
-                List<TableBean> parse = httpDictSpecification.parse(s);
-                if (CollUtil.isNotEmpty(parse)) {
-                    dictBeansReq.addAll(parse);
-                }
-            }
+        if (null == append) {
+            return;
         }
+        Arrays.stream(append).forEach(s ->
+                Optional.ofNullable(httpDictSpecification.parse(s))
+                        .ifPresent(list -> dictBeansReq.addAll(list))
+        );
+
     }
 
     private String populateLine(List<TableBean> dictBeans, String requestStr) {
