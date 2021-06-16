@@ -1,5 +1,6 @@
 package com.unwulian.specification.http;
 
+import cn.hutool.core.util.StrUtil;
 import com.unwulian.specification.IDictSpecification;
 import com.unwulian.specification.bean.TableBean;
 import com.unwulian.specification.checker.json.JsonChecker;
@@ -17,7 +18,7 @@ public class HttpDictSpecification implements IDictSpecification {
 
     @Override
     public boolean check(String content) {
-        return jsonChecker.check(content);
+        return StrUtil.isEmpty(content) || jsonChecker.check(content);
     }
 
     @Override

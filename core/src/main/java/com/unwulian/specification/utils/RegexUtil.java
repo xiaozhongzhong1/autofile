@@ -8,15 +8,17 @@ public class RegexUtil {
     private static final Pattern INT_PATTERN;
     private static final Pattern STR_PATTERN;
     private static final Pattern OBJ_PATTERN;
+    private static final Pattern ARR_PATTERN;
 
-    private static final String INT_REGEX = "整型";
-    private static final String STR_REGEX = "字符串";
+    private static final String INT_REGEX = "整型|int";
+    private static final String STR_REGEX = "字符串|string";
     private static final String OBJ_REGEX = "json对象";
-
+    private static final String ARR_REGEX = "array";
     static {
         INT_PATTERN = Pattern.compile(getIgnoreBlankPattern(INT_REGEX));
         STR_PATTERN = Pattern.compile(getIgnoreBlankPattern(STR_REGEX));
         OBJ_PATTERN = Pattern.compile(getIgnoreBlankPattern(OBJ_REGEX));
+        ARR_PATTERN = Pattern.compile(getIgnoreBlankPattern(ARR_REGEX));
     }
 
 
@@ -33,9 +35,12 @@ public class RegexUtil {
         }
         Matcher objMatcher = OBJ_PATTERN.matcher(unformated);
         if (objMatcher.find()) {
-            return "Struct";
+            return "struct";
         }
-
+        Matcher arrMatcher = ARR_PATTERN.matcher(unformated);
+        if (arrMatcher.find()) {
+            return "array";
+        }
         throw new RuntimeException("do not find match type");
     }
 

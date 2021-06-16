@@ -1,5 +1,7 @@
 package com.unwulian.specification.bean;
 
+import java.util.List;
+
 /**
  * 完成解析需要的参数集合
  */
@@ -12,6 +14,8 @@ public class ComponentParam {
     private String type;
     private String[] dictReqAppend;
     private String[] dictRespAppend;
+    private Integer[] dictIndexes;
+    private List<TableBean> commons;
 
     public ComponentParam() {
     }
@@ -34,6 +38,14 @@ public class ComponentParam {
         this.type = type;
         this.dictReqAppend = dictReqAppend;
         this.dictRespAppend = dictRespAppend;
+    }
+
+    public List<TableBean> getCommons() {
+        return commons;
+    }
+
+    public void setCommons(List<TableBean> commons) {
+        this.commons = commons;
     }
 
     public String getDictReq() {
@@ -98,5 +110,13 @@ public class ComponentParam {
 
     public void setDictRespAppend(String[] dictRespAppend) {
         this.dictRespAppend = dictRespAppend;
+    }
+
+    public Integer[] getDictIndexes() {
+        return dictIndexes;
+    }
+
+    public void setDictIndexes(Integer[] dictIndexes) {
+        this.dictIndexes = dictIndexes;
     }
 }

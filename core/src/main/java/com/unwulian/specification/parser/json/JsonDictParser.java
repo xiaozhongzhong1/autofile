@@ -1,5 +1,6 @@
 package com.unwulian.specification.parser.json;
 
+import cn.hutool.core.util.StrUtil;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
@@ -24,6 +25,9 @@ public class JsonDictParser implements IParser<List<TableBean>> {
 
     @Override
     public List<TableBean> parse(String content) {
+        if(StrUtil.isEmpty(content)){
+            return null;
+        }
         List<TableBean> list = new ArrayList<>();
         JsonArray asJsonArray = new JsonParser().parse(content).getAsJsonArray();
         //删除第一个
