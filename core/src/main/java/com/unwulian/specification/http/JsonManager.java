@@ -7,7 +7,9 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.unwulian.specification.bean.ComponentParam;
 import com.unwulian.specification.bean.TableBean;
+import com.unwulian.specification.bean.XmlBean;
 import com.unwulian.specification.exception.GlobalException;
+import com.unwulian.specification.utils.XPathUtil;
 
 import java.io.File;
 import java.util.*;
@@ -36,7 +38,7 @@ public class JsonManager {
     private List<TableBean> commons = new ArrayList<>();
 
 
-    public void addCommonTableBean(TableBean ...tableBean) {
+    public void addCommonTableBean(TableBean... tableBean) {
         Objects.requireNonNull(tableBean);
         commons.addAll(Arrays.asList(tableBean));
     }
@@ -177,8 +179,31 @@ public class JsonManager {
 
 
     public static void main(String[] args) {
-        zdKQ();
-        //zdMJ();
+        parse("xml/zk_kq_http.xml");
+    }
+
+
+    public static void parse(String path) {
+        XmlBean xmlBean = new XmlBean();
+        xmlBean.setPath(path);
+        XPathUtil.populateBeanFromXml(xmlBean);
+
+        String dict = FileUtil.readString(new File(xmlBean.getDictPath()), "utf-8");
+        String req = FileUtil.readString(new File(xmlBean.getReqPath()), "utf-8");
+        String resp = FileUtil.readString(new File(xmlBean.getRespPath()), "utf-8");
+        JsonManager jsonManager = new JsonManager(dict, req, resp, xmlBean.dictSigs(), xmlBean.reqSigs(), xmlBean.dictIndexes());
+        jsonManager.setInfos(xmlBean.reqSigs(), xmlBean.titles());
+        jsonManager.addCommonTableBean(xmlBean.tableBeans().toArray(new TableBean[xmlBean.tableBeans().size()]));
+
+        String parse = jsonManager.parse();
+        GlobalException instance = GlobalException.getInstance();
+        if (instance.hasError()) {
+            instance.error();
+        }
+        if (instance.hasWarn()) {
+            instance.warn();
+        }
+        System.out.println(parse);
     }
 
     /**
@@ -198,7 +223,7 @@ public class JsonManager {
         String dict = FileUtil.readString(new File(dictPath), "utf-8");
         String req = FileUtil.readString(new File(reqPath), "utf-8");
         String resp = FileUtil.readString(new File(respPath), "utf-8");
-        JsonManager jsonManager = new JsonManager(dict, req, resp, dictSigs.toArray(new String[dictSigs.size()]), reqSigs, new Integer[]{0,1, 4});
+        JsonManager jsonManager = new JsonManager(dict, req, resp, dictSigs.toArray(new String[dictSigs.size()]), reqSigs, new Integer[]{0, 1, 4});
         jsonManager.editRequestMap("addPerson", "addPersonRequest", "personInfo");
         jsonManager.editRequestMap("editPerson", "editPersonRequest", "personInfo");
         jsonManager.editResponseMap("addPerson", "addPersonResponse", "personInfo");
@@ -238,7 +263,7 @@ public class JsonManager {
         TableBean tableBean1 = new TableBean("data", "数据体", "struct");
         TableBean tableBean2 = new TableBean("ret", "响应码", "int");
         TableBean tableBean3 = new TableBean("msg", "响应消息", "string");
-        jsonManager.addCommonTableBean(tableBean,tableBean1,tableBean2,tableBean3);
+        jsonManager.addCommonTableBean(tableBean, tableBean1, tableBean2, tableBean3);
 
         String parse = jsonManager.parse();
         GlobalException instance = GlobalException.getInstance();
