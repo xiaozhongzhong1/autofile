@@ -178,6 +178,7 @@ public class JsonManager {
 
     public static void main(String[] args) {
         zdKQ();
+        //zdMJ();
     }
 
     /**
@@ -197,7 +198,7 @@ public class JsonManager {
         String dict = FileUtil.readString(new File(dictPath), "utf-8");
         String req = FileUtil.readString(new File(reqPath), "utf-8");
         String resp = FileUtil.readString(new File(respPath), "utf-8");
-        JsonManager jsonManager = new JsonManager(dict, req, resp, dictSigs.toArray(new String[dictSigs.size()]), reqSigs, new Integer[]{1, 4, 6});
+        JsonManager jsonManager = new JsonManager(dict, req, resp, dictSigs.toArray(new String[dictSigs.size()]), reqSigs, new Integer[]{0,1, 4});
         jsonManager.editRequestMap("addPerson", "addPersonRequest", "personInfo");
         jsonManager.editRequestMap("editPerson", "editPersonRequest", "personInfo");
         jsonManager.editResponseMap("addPerson", "addPersonResponse", "personInfo");
