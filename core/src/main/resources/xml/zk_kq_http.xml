@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<doc>
+    <content>
+        <dictPath>C:\Users\Administrator\Desktop\testCode2\dict.txt</dictPath>
+        <reqPath>C:\Users\Administrator\Desktop\testCode2\request.txt</reqPath>
+        <respPath>C:\Users\Administrator\Desktop\testCode2\response.txt</respPath>
+    </content>
+
+    <!--给上面path中的json编号：例如dictPath的第一个json是loginRequest-->
+    <sigs>
+        <dictSigs>
+            loginRequest, change_passwordRequest, set_timeRequest, get_timeResponse,
+            set_face_cfgRequest, add_userRequest, del_userRequest, query_userRequest,
+            query_userResponse, remote_ctrlRequest, upgradeRequest
+        </dictSigs>
+        <reqSigs>
+            login, change_password, set_time, get_time, heartbeat, set_face_cfg,
+            add_user, del_user, query_user, remote_ctrl, upgrade, restart
+        </reqSigs>
+    </sigs>
+
+    <!--markdown的中文标题-->
+    <!--注意：type要和上面reqSigs一一对应-->
+
+    <titles>
+        登录, 修改密码, 设置时间, 获取时间, 心跳, 设置人脸参数, 添加人员
+        , 删除人员, 查询人员, 远程开门, 远程升级, 重启
+    </titles>
+
+    <dictIndexes>
+        0,2,1
+    </dictIndexes>
+
+    <!--通用字典-->
+    <commonTableBeans>
+        <names>cmd,data,ret,msg</names>
+        <comments>命令,数据体,响应码,响应消息</comments>
+        <types>string,struct,int,string</types>
+    </commonTableBeans>
+</doc>
