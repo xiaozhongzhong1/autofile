@@ -26,9 +26,9 @@ public class JsonAttrParser implements IParser<String> {
             builder.append(key).append(LINE_SEPERATOR);
 
             if (jsonElement.isJsonObject()) {
-                builder.append(POUND_KEY).append(key).append(LINE_SEPERATOR);
+                builder.append(EQUAL_KEY).append(key).append(LINE_SEPERATOR);
                 append(builder, jsonElement.getAsJsonObject());
-                builder.append(POUND_KEY).append(key).append(LINE_SEPERATOR);
+                builder.append(EQUAL_KEY).append(key).append(LINE_SEPERATOR);
             }
 
         }

@@ -110,7 +110,7 @@ public class HttpSpecificationComponent {
         String[] lines = requestStr.split(IParser.LINE_SEPERATOR);
         List<String> errors = new ArrayList<>();
         for (String line : lines) {
-            if (line.contains("#")) {
+            if (line.contains(IParser.EQUAL_KEY)) {
                 newLines.add(line);
                 continue;
             }
