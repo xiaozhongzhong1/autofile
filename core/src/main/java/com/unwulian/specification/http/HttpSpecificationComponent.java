@@ -26,16 +26,6 @@ public class HttpSpecificationComponent {
     private String[] dictRespAppend;
     private List<TableBean> commons = new ArrayList<>();
 
-    public HttpSpecificationComponent(String dictReq, String dictResp, String request, String response, String title, String type, Integer[] dictIndexes) {
-        this.dictReq = dictReq;
-        this.dictResp = dictResp;
-        this.request = request;
-        this.response = response;
-        this.title = title;
-        this.type = type;
-        httpDictSpecification = new HttpDictSpecification(dictIndexes);
-    }
-
     public HttpSpecificationComponent(ComponentParam componentParam) {
         this.dictReq = componentParam.getDictReq();
         this.dictResp = componentParam.getDictResp();

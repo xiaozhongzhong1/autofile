@@ -2,6 +2,7 @@ package com.unwulian.specification.bean;
 
 import cn.hutool.core.util.StrUtil;
 import com.unwulian.specification.anno.XpathNode;
+import com.unwulian.specification.utils.XPathUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -75,6 +76,11 @@ public class XmlBean {
 
     //用于存储xml路径
     private String path;
+
+    public XmlBean(String path) {
+        this.path = path;
+        XPathUtil.populateBeanFromXml(this);
+    }
 
     public String getDictIndexes() {
         return dictIndexes;

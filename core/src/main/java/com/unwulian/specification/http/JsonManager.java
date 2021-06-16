@@ -184,9 +184,7 @@ public class JsonManager {
 
 
     public static void parse(String path) {
-        XmlBean xmlBean = new XmlBean();
-        xmlBean.setPath(path);
-        XPathUtil.populateBeanFromXml(xmlBean);
+        XmlBean xmlBean = new XmlBean(path);
 
         String dict = FileUtil.readString(new File(xmlBean.getDictPath()), "utf-8");
         String req = FileUtil.readString(new File(xmlBean.getReqPath()), "utf-8");
