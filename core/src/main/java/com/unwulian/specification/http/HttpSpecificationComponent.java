@@ -111,8 +111,16 @@ public class HttpSpecificationComponent {
         List<String> errors = new ArrayList<>();
         List<TableBean> append = new ArrayList<>();
         boolean appendFlag = false;
+        String appendCache = null;
         for (String line : lines) {
             if (line.contains(IParser.EQUAL_KEY)) {
+                //已经存在了，则说明是结束标志
+                if(line.equalsIgnoreCase(appendCache)){
+                    appendFlag = false;
+                    newLines.add(line);
+                    continue;
+                }
+                appendCache = line;
                 newLines.add(line);
                 String appendKey = line.substring(2);
                 append.clear();
@@ -131,27 +139,29 @@ public class HttpSpecificationComponent {
             /**
              * 先从给定的里面取，没有的话从append里面去取，再没有的话从common里面取
              */
-            try {
-                tableBean = getTableBean(key, dictBeans);
-            } catch (Exception e) {
-                if (appendFlag) {
-                    try {
-                        tableBean = getTableBean(key, append);
-                    } catch (Exception e1) {
-                        try {
-                            tableBean = getTableBean(key, commons);
-                        } catch (Exception e2) {
-                            errors.add(key);
-                        }
-                    }
-                } else {
+            if (appendFlag) {
+                try {
+                    tableBean = getTableBean(key, append);
+                } catch (Exception e1) {
                     try {
                         tableBean = getTableBean(key, commons);
                     } catch (Exception e2) {
                         errors.add(key);
                     }
                 }
+            } else {
+                try {
+                    tableBean = getTableBean(key, dictBeans);
+                } catch (Exception e2) {
+                    try{
+                        tableBean = getTableBean(key, commons);
+                    }catch (Exception e){
+                        errors.add(key);
+                    }
+
+                }
             }
+
             if (null != tableBean) {
                 newLines.add(Joiner.on(":").join(line, tableBean.getType(), tableBean.getComment()));
             }
