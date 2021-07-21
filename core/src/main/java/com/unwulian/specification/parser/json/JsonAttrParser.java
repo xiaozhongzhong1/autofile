@@ -17,7 +17,7 @@ public class JsonAttrParser implements IParser<String> {
         StringBuilder builder = new StringBuilder();
         JsonObject json = new JsonParser().parse(content).getAsJsonObject();
         append(builder, json);
-        return builder.toString();
+        return builder.toString().replaceAll("\"","");
     }
 
     private void append(StringBuilder builder, JsonObject json) {
@@ -29,7 +29,13 @@ public class JsonAttrParser implements IParser<String> {
                 builder.append(EQUAL_KEY).append(key).append(LINE_SEPERATOR);
                 append(builder, jsonElement.getAsJsonObject());
                 builder.append(EQUAL_KEY).append(key).append(LINE_SEPERATOR);
+            }else if(jsonElement.isJsonArray()){
+                builder.append(EQUAL_KEY).append(key).append(LINE_SEPERATOR);
+                JsonElement jsonElement1 = jsonElement.getAsJsonArray().get(0);
+                append(builder, jsonElement1.getAsJsonObject());
+                builder.append(EQUAL_KEY).append(key).append(LINE_SEPERATOR);
             }
+
 
         }
     }

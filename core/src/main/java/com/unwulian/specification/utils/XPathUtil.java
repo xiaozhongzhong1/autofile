@@ -66,8 +66,10 @@ public class XPathUtil {
                 try {
                     Node node1 = (Node) xpath.evaluate(node, doc,
                             XPathConstants.NODE);
-                    String textContent = node1.getTextContent();
-                    declaredField.set(t, textContent);
+                    if(node1!=null) {
+                        String textContent = node1.getTextContent();
+                        declaredField.set(t, textContent);
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

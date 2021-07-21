@@ -1,11 +1,13 @@
 package com.unwulian.specification.http;
 
+import cn.hutool.core.collection.CollUtil;
 import com.google.common.base.Joiner;
 import com.unwulian.specification.bean.ComponentParam;
 import com.unwulian.specification.bean.TableBean;
 import com.unwulian.specification.codemodel.MdModel;
 import com.unwulian.specification.exception.GlobalException;
 import com.unwulian.specification.parser.IParser;
+import com.unwulian.specification.parser.json.JsonDictParser;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -107,23 +109,47 @@ public class HttpSpecificationComponent {
         List<String> newLines = new ArrayList<>();
         String[] lines = requestStr.split(IParser.LINE_SEPERATOR);
         List<String> errors = new ArrayList<>();
+        List<TableBean> append = new ArrayList<>();
+        boolean appendFlag = false;
         for (String line : lines) {
             if (line.contains(IParser.EQUAL_KEY)) {
                 newLines.add(line);
+                String appendKey = line.substring(2);
+                append.clear();
+                if (JsonManager.append.containsKey(appendKey)) {
+                    List<TableBean> tableBeans = JsonDictParser.getTableBeans(JsonManager.append.get(appendKey));
+                    if (CollUtil.isNotEmpty(tableBeans)) {
+                        append.clear();
+                        append.addAll(tableBeans);
+                        appendFlag = true;
+                    }
+                }
                 continue;
             }
             String key = line.trim();
             TableBean tableBean = null;
             /**
-             * 先从给定的里面取，没有的话从common里面取
+             * 先从给定的里面取，没有的话从append里面去取，再没有的话从common里面取
              */
             try {
                 tableBean = getTableBean(key, dictBeans);
             } catch (Exception e) {
-                try {
-                    tableBean = getTableBean(key, commons);
-                } catch (Exception e2) {
-                    errors.add(key);
+                if (appendFlag) {
+                    try {
+                        tableBean = getTableBean(key, append);
+                    } catch (Exception e1) {
+                        try {
+                            tableBean = getTableBean(key, commons);
+                        } catch (Exception e2) {
+                            errors.add(key);
+                        }
+                    }
+                } else {
+                    try {
+                        tableBean = getTableBean(key, commons);
+                    } catch (Exception e2) {
+                        errors.add(key);
+                    }
                 }
             }
             if (null != tableBean) {

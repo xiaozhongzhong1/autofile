@@ -2,9 +2,9 @@
 
 <doc>
     <content>
-        <dictPath>C:\Users\Administrator\Desktop\testCode2\dict.txt</dictPath>
-        <reqPath>C:\Users\Administrator\Desktop\testCode2\request.txt</reqPath>
-        <respPath>C:\Users\Administrator\Desktop\testCode2\response.txt</respPath>
+        <dictPath>C:\Users\Administrator\Desktop\data\生成md文档\testCode2\dict.txt</dictPath>
+        <reqPath>C:\Users\Administrator\Desktop\data\生成md文档\testCode2\request.txt</reqPath>
+        <respPath>C:\Users\Administrator\Desktop\data\生成md文档\testCode2\response.txt</respPath>
     </content>
 
     <!--给上面path中的json编号：例如dictPath的第一个json是loginRequest-->

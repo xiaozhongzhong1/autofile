@@ -24,6 +24,8 @@ public class JsonManager {
     private JsonObject dict = new JsonObject();
     private JsonObject request = new JsonObject();
     private JsonObject response = new JsonObject();
+    public static Map<String, JsonArray> append = new HashMap<>();
+
 
     private List<String> requests = new ArrayList<>();
     private List<String> responses = new ArrayList<>();
@@ -178,7 +180,7 @@ public class JsonManager {
 
 
     public static void main(String[] args) {
-        parse("xml/zk_kq_http.xml");
+        parse("xml/fujica.xml");
     }
 
 
@@ -188,10 +190,13 @@ public class JsonManager {
         String dict = FileUtil.readString(new File(xmlBean.getDictPath()), "utf-8");
         String req = FileUtil.readString(new File(xmlBean.getReqPath()), "utf-8");
         String resp = FileUtil.readString(new File(xmlBean.getRespPath()), "utf-8");
+        String append = FileUtil.readString(new File(xmlBean.getAppendPath()), "utf-8");
         JsonManager jsonManager = new JsonManager(dict, req, resp, xmlBean.dictSigs(), xmlBean.reqSigs(), xmlBean.dictIndexes());
+        setAppend(append, xmlBean.getAppendSigs());
         jsonManager.setInfos(xmlBean.reqSigs(), xmlBean.titles());
-        jsonManager.addCommonTableBean(xmlBean.tableBeans().toArray(new TableBean[xmlBean.tableBeans().size()]));
-
+        if (null != xmlBean.tableBeans()) {
+            jsonManager.addCommonTableBean(xmlBean.tableBeans().toArray(new TableBean[xmlBean.tableBeans().size()]));
+        }
         String parse = jsonManager.parse();
         GlobalException instance = GlobalException.getInstance();
         if (instance.hasError()) {
@@ -201,6 +206,19 @@ public class JsonManager {
             instance.warn();
         }
         System.out.println(parse);
+
+        //写入文件中去
+        FileUtil.writeString(parse, "C:\\Users\\Administrator\\Desktop\\data\\fujica\\fujica.md", "utf-8");
+
+    }
+
+    private static void setAppend(String append1, String appendSigs) {
+        String[] split = appendSigs.split(",");
+        JsonArray appendArr = new JsonParser().parse(append1).getAsJsonArray();
+        for (int i = 0; i < appendArr.size(); i++) {
+            JsonArray asJsonArray = appendArr.get(i).getAsJsonArray();
+            append.put(split[i].trim(), asJsonArray);
+        }
     }
 
     /**

@@ -38,4 +38,19 @@ public class JsonDictParser implements IParser<List<TableBean>> {
         }
         return list;
     }
+
+
+    public static List<TableBean> getTableBeans(JsonArray asJsonArray){
+        //深拷贝一个JsonArray
+        JsonArray jsonElements = asJsonArray.deepCopy();
+        List<TableBean> tableBeans = new ArrayList<>();
+        TableMap tableMap = new TableMap();
+        tableMap.put(0,3,1);
+        jsonElements.remove(0);
+        for (JsonElement jsonElement : jsonElements) {
+            TableBean tableBean = new TableBean(jsonElement.getAsJsonArray(), tableMap);
+            tableBeans.add(tableBean);
+        }
+        return tableBeans;
+    }
 }

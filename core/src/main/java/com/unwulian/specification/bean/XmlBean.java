@@ -17,10 +17,14 @@ public class XmlBean {
     private String reqPath;
     @XpathNode("doc/content/respPath")
     private String respPath;
+    @XpathNode("doc/content/appendPath")
+    private String appendPath;
     @XpathNode("doc/sigs/dictSigs")
     private String dictSigs;
     @XpathNode("doc/sigs/reqSigs")
     private String reqSigs;
+    @XpathNode("doc/sigs/appendSigs")
+    private String appendSigs;
     @XpathNode("doc/titles")
     private String titles;
     @XpathNode("doc/commonTableBeans/names")
@@ -168,5 +172,21 @@ public class XmlBean {
 
     public void setCommonTypes(String commonTypes) {
         this.commonTypes = commonTypes;
+    }
+
+    public String getAppendPath() {
+        return appendPath;
+    }
+
+    public void setAppendPath(String appendPath) {
+        this.appendPath = appendPath;
+    }
+
+    public String getAppendSigs() {
+        return appendSigs;
+    }
+
+    public void setAppendSigs(String appendSigs) {
+        this.appendSigs = appendSigs;
     }
 }
