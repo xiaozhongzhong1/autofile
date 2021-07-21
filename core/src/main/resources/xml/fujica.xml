@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<doc>
+    <content>
+        <dictPath>C:\Users\Administrator\Desktop\data\fujica\dict.txt</dictPath>
+        <reqPath>C:\Users\Administrator\Desktop\data\fujica\request.txt</reqPath>
+        <respPath>C:\Users\Administrator\Desktop\data\fujica\response.txt</respPath>
+        <appendPath>C:\Users\Administrator\Desktop\data\fujica\append.txt</appendPath>
+    </content>
+
+    <!--给上面path中的json编号：例如dictPath的第一个json是loginRequest-->
+    <sigs>
+        <dictSigs>
+            InVehicleGetByCustomRequest,InVehicleGetByCustomResponse,OutVehicleGetByFuncRequest,OutVehicleGetByFuncResponse,
+            StaffServiceEditStaffRequest,StaffServiceEditStaffResponse
+        </dictSigs>
+        <reqSigs>
+            InVehicleGetByCustom,OutVehicleGetByFunc,StaffServiceEditStaff
+        </reqSigs>
+        <appendSigs>
+            PageAttri,State,Records,Models,Model
+        </appendSigs>
+    </sigs>
+
+    <!--markdown的中文标题-->
+    <!--注意：type要和上面reqSigs一一对应-->
+
+    <titles>
+        场内记录条件查询,已出车辆查询,人事新增
+    </titles>
+
+    <dictIndexes>
+        0,3,1
+    </dictIndexes>
+
+
+</doc>

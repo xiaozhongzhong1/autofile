@@ -87,7 +87,7 @@ public class RegexUtil {
     public static String removeSpecialChar(String ori){
         String s = ori.replaceAll("\\n", "");
         String s1 = s.replaceAll("\\t", "");
-        String s2 = s.replaceAll("\"", "");
+        String s2 = s1.replaceAll("\"", "");
         return s2;
     }
 }
