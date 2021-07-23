@@ -35,39 +35,42 @@ public class RegexUtil {
 
 
     public static String formatType(String unformated) {
-        unformated = unformated.trim().toLowerCase();
 
-        Matcher matcher = INT_PATTERN.matcher(unformated);
+        String unformated1 = unformated.trim().toLowerCase();
+
+        Matcher matcher = INT_PATTERN.matcher(unformated1);
         if (matcher.find()) {
             return "int";
         }
-        Matcher strMatcher = STR_PATTERN.matcher(unformated);
+        Matcher strMatcher = STR_PATTERN.matcher(unformated1);
         if (strMatcher.find()) {
             return "string";
         }
-        Matcher objMatcher = OBJ_PATTERN.matcher(unformated);
+        Matcher objMatcher = OBJ_PATTERN.matcher(unformated1);
         if (objMatcher.find()) {
-            return "struct";
+            String generalType = getGeneral(unformated);
+            return "struct".concat(generalType);
         }
-        Matcher arrMatcher = ARR_PATTERN.matcher(unformated);
+        Matcher arrMatcher = ARR_PATTERN.matcher(unformated1);
         if (arrMatcher.find()) {
             return "array";
         }
 
-        Matcher boolMatcher = BOOL_PATTERN.matcher(unformated);
+        Matcher boolMatcher = BOOL_PATTERN.matcher(unformated1);
         if (boolMatcher.find()) {
             return "bool";
         }
 
-        Matcher objArrMatcher = OBJ_ARR_PATTERN.matcher(unformated);
+        Matcher objArrMatcher = OBJ_ARR_PATTERN.matcher(unformated1);
         if (objArrMatcher.find()) {
-            return "struct[]";
+            String generalType = getGeneral(unformated);
+            return "struct".concat(generalType).concat("[]");
         }
-        Matcher longMatcher = LONG_PATTERN.matcher(unformated);
+        Matcher longMatcher = LONG_PATTERN.matcher(unformated1);
         if (longMatcher.find()) {
             return "long";
         }
-        Matcher doubleMatcher = DOUBLE_PATTERN.matcher(unformated);
+        Matcher doubleMatcher = DOUBLE_PATTERN.matcher(unformated1);
         if (doubleMatcher.find()) {
             return "double";
         }
@@ -75,6 +78,37 @@ public class RegexUtil {
         throw new RuntimeException("do not find match type");
     }
 
+
+    private static String getGeneral(String regex){
+        if(!regex.contains("<")){
+            return "";
+        }
+        Pattern compile = Pattern.compile("<(.*)?>");
+        Matcher matcher = compile.matcher(regex);
+        if(matcher.find()){
+            return matcher.group();
+        }
+        return "";
+
+    }
+
+    /**
+     * 获取<>泛型中的类型
+     * @param regex
+     * @return
+     */
+    public static String getGeneralType(String regex){
+        if(!regex.contains("<")){
+            return null;
+        }
+        Pattern compile = Pattern.compile("<((.*)?)>");
+        Matcher matcher = compile.matcher(regex);
+        if(matcher.find()){
+            return matcher.group(1);
+        }
+        return null;
+
+    }
 
     private static String getIgnoreBlankPattern(String regex) {
         StringBuilder strBuilder = new StringBuilder();

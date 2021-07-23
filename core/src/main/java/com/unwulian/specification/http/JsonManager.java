@@ -180,7 +180,7 @@ public class JsonManager {
 
 
     public static void main(String[] args) {
-        parse("xml/fujica.xml");
+        parse("xml/fujica2.xml");
     }
 
 
@@ -208,7 +208,7 @@ public class JsonManager {
         System.out.println(parse);
 
         //写入文件中去
-        FileUtil.writeString(parse, "C:\\Users\\Administrator\\Desktop\\data\\fujica\\fujica.md", "utf-8");
+        FileUtil.writeString(parse, "C:\\Users\\Administrator\\Desktop\\data\\fujicatest\\fujica.md", "utf-8");
 
     }
 

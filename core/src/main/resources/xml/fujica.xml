@@ -2,10 +2,10 @@
 
 <doc>
     <content>
-        <dictPath>C:\Users\Administrator\Desktop\data\fujica\dict.txt</dictPath>
-        <reqPath>C:\Users\Administrator\Desktop\data\fujica\request.txt</reqPath>
-        <respPath>C:\Users\Administrator\Desktop\data\fujica\response.txt</respPath>
-        <appendPath>C:\Users\Administrator\Desktop\data\fujica\append.txt</appendPath>
+        <dictPath>C:\Users\Administrator\Desktop\data\fujicatest\dict.txt</dictPath>
+        <reqPath>C:\Users\Administrator\Desktop\data\fujicatest\request.txt</reqPath>
+        <respPath>C:\Users\Administrator\Desktop\data\fujicatest\response.txt</respPath>
+        <appendPath>C:\Users\Administrator\Desktop\data\fujicatest\append.txt</appendPath>
     </content>
 
     <!--给上面path中的json编号：例如dictPath的第一个json是loginRequest-->
@@ -18,7 +18,7 @@
             InVehicleGetByCustom,OutVehicleGetByFunc,StaffServiceEditStaff
         </reqSigs>
         <appendSigs>
-            PageAttri,State,Records,Models,Model
+            PageAttri1,State1,Records2,Models2,Model3
         </appendSigs>
     </sigs>
 

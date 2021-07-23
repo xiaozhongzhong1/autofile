@@ -1,6 +1,7 @@
 package com.unwulian.specification.http;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.StrUtil;
 import com.google.common.base.Joiner;
 import com.unwulian.specification.bean.ComponentParam;
 import com.unwulian.specification.bean.TableBean;
@@ -8,11 +9,9 @@ import com.unwulian.specification.codemodel.MdModel;
 import com.unwulian.specification.exception.GlobalException;
 import com.unwulian.specification.parser.IParser;
 import com.unwulian.specification.parser.json.JsonDictParser;
+import com.unwulian.specification.utils.RegexUtil;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class HttpSpecificationComponent {
@@ -112,17 +111,20 @@ public class HttpSpecificationComponent {
         List<TableBean> append = new ArrayList<>();
         boolean appendFlag = false;
         String appendCache = null;
+        Map<String,String> appendKeyMap = new HashMap<>();
         for (String line : lines) {
             if (line.contains(IParser.EQUAL_KEY)) {
                 //已经存在了，则说明是结束标志
                 if(line.equalsIgnoreCase(appendCache)){
                     appendFlag = false;
-                    newLines.add(line);
+                    newLines.add(line.concat(""));
                     continue;
                 }
                 appendCache = line;
                 newLines.add(line);
-                String appendKey = line.substring(2);
+                //查看是否有泛型
+                String appendKey = appendKeyMap.containsKey(line.substring(2))?
+                        appendKeyMap.get(line.substring(2)):line.substring(2);
                 append.clear();
                 if (JsonManager.append.containsKey(appendKey)) {
                     List<TableBean> tableBeans = JsonDictParser.getTableBeans(JsonManager.append.get(appendKey));
@@ -162,9 +164,17 @@ public class HttpSpecificationComponent {
                 }
             }
 
-            if (null != tableBean) {
-                newLines.add(Joiner.on(":").join(line, tableBean.getType(), tableBean.getComment()));
+            String type = tableBean.getType();
+            //查看是否有泛型
+            String generalType = RegexUtil.getGeneralType(type);
+            if(StrUtil.isNotEmpty(generalType)){
+                appendKeyMap.put(key,generalType);
             }
+            if (null != tableBean) {
+                newLines.add(Joiner.on(":").join(line, type, tableBean.getComment()));
+            }
+
+
 
         }
         if (errors.isEmpty()) {
